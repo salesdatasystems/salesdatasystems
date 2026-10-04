@@ -176,7 +176,8 @@ const fmt={
  p1:v=>v.toFixed(1)+"%",
  k0:v=>Math.round(v).toLocaleString("en-CA")+"k",
  m:v=>"$"+(v/1000).toFixed(1)+"B",
- pop:v=>(v/1e6).toFixed(2)+"M"
+ pop:v=>(v/1e6).toFixed(2)+"M",
+ c1:v=>v.toFixed(1)+"¢"
 };
 const keys=Object.keys(M);
 const sel=$("metric");
@@ -266,7 +267,7 @@ function drawChart(){
  hit.addEventListener("pointermove",move);hit.addEventListener("pointerdown",move);hit.addEventListener("pointerleave",leave);
 }
 function fmtVal(m,v){return fmt[m.fmt](v);}
-function yTick(m,t,idx){if(idx)return t.toFixed(0);const f=m.fmt;if(f==="p1")return t+"%";if(f==="d0"||f==="d2")return "$"+(Math.abs(t)>=1000?(t/1000)+"k":t);if(f==="m")return "$"+(t/1000)+"B";if(f==="b1")return "$"+t+"B";if(f==="k0")return t>=1000?(t/1000)+"M":t+"k";if(f==="pop")return (t/1e6)+"M";return t;}
+function yTick(m,t,idx){if(idx)return t.toFixed(0);const f=m.fmt;if(f==="p1")return t+"%";if(f==="c1")return t+"¢";if(f==="d0"||f==="d2")return "$"+(Math.abs(t)>=1000?(t/1000)+"k":t);if(f==="m")return "$"+(t/1000)+"B";if(f==="b1")return "$"+t+"B";if(f==="k0")return t>=1000?(t/1000)+"M":t+"k";if(f==="pop")return (t/1e6)+"M";return t;}
 function valTxt(m,p,idx){return idx?`${p.v.toFixed(1)} <span class="na">(${fmtVal(m,p.raw)})</span>`:fmtVal(m,p.v);}
 // ---------- era statistics
 function eraStats(mk,geo){
@@ -284,21 +285,22 @@ function eraStats(mk,geo){
   return {base:baseP,end:endP,firstBase,change,per,avg,n:mine.length,partial:e.e>=NOW-0.01};
  });
 }
+function unitOf(m){return m.delta==="pct"?"%":m.fmt==="p1"?" pts":m.fmt==="c1"?"¢":"";}
+function chg(m,v,d){if(v==null)return "—";if(m.delta==="abs"&&m.fmt==="m"){v=v/1000;return (v>0?"+":v<0?"−":"")+"$"+Math.abs(v).toFixed(1)+"B";}return sgn(v,d,unitOf(m));}
 function sgn(v,d,u){if(v==null)return "—";const s=v>0?"+":v<0?"−":"";return s+Math.abs(v).toFixed(d)+u;}
 function arrow(v){return v==null||Math.abs(v)<0.005?"":v>0?'<span class="arrow">▲</span>':'<span class="arrow">▼</span>';}
 function eraHead(e){return `<span class="erahead"><i class="dot" style="background:var(--${e.key})"></i><span>${PARTY[e.party].name}<span class="sub" style="display:block;font-size:11px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--muted)">${yr(e.start)}–${e.end?yr(e.end):"now"}</span></span></span>`;}
 function drawEraTable(){
  const m=M[state.m];const t=$("eraTable");const bcS=eraStats(state.m,"bc");const caS=m.ca?eraStats(state.m,"ca"):null;const pct=m.delta==="pct";
- const unit=pct?"%":(m.fmt==="p1"?" pts":"");
- let h=`<thead><tr><th>Government</th><th>Premiers</th><th>Starts from</th><th>Ends at</th><th>Change</th><th>${pct?"Per year (compound)":"Per year"}</th><th>Average over years in office</th>${caS?"<th>Canada: change</th>":""}</tr></thead><tbody>`;
+  let h=`<thead><tr><th>Government</th><th>Premiers</th><th>Starts from</th><th>Ends at</th><th>Change</th><th>${pct?"Per year (compound)":"Per year"}</th><th>Average over years in office</th>${caS?"<th>Canada: change</th>":""}</tr></thead><tbody>`;
  eras.forEach((e,i)=>{const s=bcS[i];
   if(!s){h+=`<tr><td>${eraHead(e)}</td><td class="na">${e.premiers.join(", ")}</td><td colspan="${caS?5:4}" class="na">No data for these years</td></tr>`;return;}
   const c=caS&&caS[i];
   h+=`<tr><td>${eraHead(e)}</td><td style="white-space:normal;min-width:130px">${e.premiers.join(", ")}</td>
   <td>${fmtVal(m,s.base.v)}<span class="sub">${yrLabel(state.m,s.base.y)}${s.firstBase?" (first data year)":""}</span></td>
   <td>${fmtVal(m,s.end.v)}<span class="sub">${yrLabel(state.m,s.end.y)}${s.partial?" (latest)":""}</span></td>
-  <td>${arrow(s.change)}${sgn(s.change,pct?1:2,unit)}</td><td>${sgn(s.per,pct?2:2,pct?"%":(m.fmt==="p1"?" pts":""))}</td><td>${fmtVal(m,s.avg)}</td>
-  ${caS?`<td>${c&&c.change!=null?arrow(c.change)+sgn(c.change,pct?1:2,unit):"—"}</td>`:""}</tr>`;});
+  <td>${arrow(s.change)}${chg(m,s.change,pct?1:2)}</td><td>${chg(m,s.per,2)}</td><td>${fmtVal(m,s.avg)}</td>
+  ${caS?`<td>${c&&c.change!=null?arrow(c.change)+chg(m,c.change,pct?1:2):"—"}</td>`:""}</tr>`;});
  t.innerHTML=h+"</tbody>";
 }
 function drawYearTable(){
@@ -319,10 +321,10 @@ function drawMatrix(){
  let grp="";
  keys.forEach(k=>{const m=M[k];if(m.group!==grp){grp=m.group;h+=`<tr><td colspan="${eras.length+1}" style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--bg)">${grp}</td></tr>`;}
   const st=eraStats(k,"bc");const pct=m.delta==="pct";const avgMode=m.stat==="avg";
-  h+=`<tr><td style="white-space:normal;min-width:190px">${m.short||m.label}<span class="sub">${avgMode?"average over years in office":pct?"% change":(m.fmt==="p1"?"change, percentage points":"change")}</span></td>`;
+  h+=`<tr><td style="white-space:normal;min-width:190px">${m.short||m.label}<span class="sub">${avgMode?"average over years in office":pct?"% change":(m.fmt==="p1"?"change, percentage points":m.fmt==="c1"?"change, cents per revenue dollar":"change")}</span></td>`;
   st.forEach(s=>{if(!s){h+=`<td class="na">—</td>`;return;}
    if(avgMode){h+=`<td>${s.avg.toFixed(1)}${m.fmt==="p1"?"%":""}<span class="sub">${s.base.y}–${s.end.y}</span></td>`;return;}
-   h+=`<td>${arrow(s.change)}${sgn(s.change,1,pct?"%":(m.fmt==="p1"?" pts":""))}<span class="sub">${short(k,s.base.y)}→${short(k,s.end.y)}</span></td>`;});
+   h+=`<td>${arrow(s.change)}${chg(m,s.change,1)}<span class="sub">${short(k,s.base.y)}→${short(k,s.end.y)}</span></td>`;});
   h+="</tr>";});
  t.innerHTML=h+"</tbody>";
 }

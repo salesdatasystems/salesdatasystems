@@ -1,58 +1,58 @@
-fiscal_year,start_year,taxpayer_debt_m,taxpayer_pct_gdp,total_debt_m,total_pct_gdp,source
-1969/70,1969,622,6.7,2283,24.7,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1970/71,1970,697,7.1,2505,25.6,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1971/72,1971,793,7.2,2741,24.9,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1972/73,1972,888,7.2,2950,23.8,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1973/74,1973,1027,6.7,3255,21.1,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1974/75,1974,1153,6.5,3803,21.3,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1975/76,1975,1424,7.2,4568,23.1,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1976/77,1976,1992,8.4,5779,24.4,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1977/78,1977,2133,8.1,6597,24.9,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1978/79,1978,2117,7.1,6955,23.3,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1979/80,1979,2397,6.9,8101,23.3,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1980/81,1980,2588,6.5,8544,21.6,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1981/82,1981,2946,6.6,10173,22.7,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1982/83,1982,4665,10.4,12357,27.4,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1983/84,1983,6195,13.0,14635,30.8,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1984/85,1984,6468,13.0,15550,31.2,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1985/86,1985,7563,14.1,16553,30.9,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1986/87,1986,8660,15.3,17145,30.3,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1987/88,1987,8863,14.2,17012,27.2,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1988/89,1988,9059,13.1,16455,23.7,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1989/90,1989,8919,11.8,16259,21.5,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1990/91,1990,9818,12.4,17262,21.8,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1991/92,1991,12548,15.3,20041,24.5,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1992/93,1992,15896,18.2,23422,26.8,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1993/94,1993,17981,19.1,25927,27.6,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1994/95,1994,19037,18.9,27050,26.9,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1995/96,1995,19919,18.9,28766,27.2,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1996/97,1996,21275,19.5,29371,27.0,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1997/98,1997,22151,19.4,30355,26.5,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1998/99,1998,23232,20.1,32142,27.8,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-1999/00,1999,25206,20.8,34438,28.5,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-2000/01,2000,25104,19.1,33788,25.7,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-2001/02,2001,27514,20.6,36082,27.0,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-2002/03,2002,29383,21.3,36857,26.7,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-2003/04,2003,30014,20.6,37775,25.9,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-2004/05,2004,28668,18.2,35869,22.7,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-2005/06,2005,27251,16.1,34457,20.3,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-2006/07,2006,25968,14.2,33439,18.3,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-2007/08,2007,26589,13.8,34637,18.0,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-2008/09,2008,26446,13.3,38014,19.1,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-2009/10,2009,30021,15.6,41885,21.8,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-2010/11,2010,31855,15.7,45154,22.2,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-2011/12,2011,34692,16.4,50193,23.7,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)"
-2012/13,2012,38182,17.2,55816,25.2,"BC Budget and Fiscal Plan 2019/20-2021/22, Tables A17 & A19"
-2013/14,2013,41068,17.9,60693,26.5,"BC Budget and Fiscal Plan 2019/20-2021/22, Tables A17 & A19"
-2014/15,2014,41880,17.3,62920,26.0,"BC Budget and Fiscal Plan 2019/20-2021/22, Tables A17 & A19"
-2015/16,2015,42719,17.2,65251,26.2,"BC Budget and Fiscal Plan 2019/20-2021/22, Tables A17 & A19"
-2016/17,2016,41499,15.7,65837,24.9,"BC Budget and Fiscal Plan 2019/20-2021/22, Tables A17 & A19"
-2017/18,2017,43607,15.5,64919,23.0,"BC Budget and Fiscal Plan 2019/20-2021/22, Tables A17 & A19"
-2018/19,2018,43957,14.9,67916,23.0,"BC Budget and Fiscal Plan 2019/20-2021/22, Tables A17 & A19 (updated forecast, not final actual)"
-2019/20,2019,46229,15.0,72161,23.4,"BC Budget and Fiscal Plan 2026/27-2028/29, Tables A17 & A19"
-2020/21,2020,59750,19.4,87100,28.3,"BC Budget and Fiscal Plan 2026/27-2028/29, Tables A17 & A19"
-2021/22,2021,62341,17.5,90666,25.4,"BC Budget and Fiscal Plan 2026/27-2028/29, Tables A17 & A19"
-2022/23,2022,59888,15.0,89380,22.3,"BC Budget and Fiscal Plan 2026/27-2028/29, Tables A17 & A19"
-2023/24,2023,75402,18.2,107462,25.9,"BC Budget and Fiscal Plan 2026/27-2028/29, Tables A17 & A19"
-2024/25,2024,99089,23.1,133877,31.2,"BC Budget and Fiscal Plan 2026/27-2028/29, Tables A17 & A19"
-2025/26,2025,116540,26.1,154059,34.5,"BC Budget and Fiscal Plan 2026/27-2028/29, Tables A17 & A19 (updated forecast, not final actual)"
+fiscal_year,start_year,taxpayer_debt_m,taxpayer_pct_gdp,total_debt_m,total_pct_gdp,source,operating_debt_m,interest_bite_cents
+1969/70,1969,622,6.7,2283,24.7,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",0,
+1970/71,1970,697,7.1,2505,25.6,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",0,
+1971/72,1971,793,7.2,2741,24.9,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",0,
+1972/73,1972,888,7.2,2950,23.8,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",0,
+1973/74,1973,1027,6.7,3255,21.1,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",0,
+1974/75,1974,1153,6.5,3803,21.3,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",0,
+1975/76,1975,1424,7.2,4568,23.1,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",0,
+1976/77,1976,1992,8.4,5779,24.4,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",261,
+1977/78,1977,2133,8.1,6597,24.9,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",261,
+1978/79,1978,2117,7.1,6955,23.3,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",261,
+1979/80,1979,2397,6.9,8101,23.3,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",235,
+1980/81,1980,2588,6.5,8544,21.6,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",209,
+1981/82,1981,2946,6.6,10173,22.7,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",183,
+1982/83,1982,4665,10.4,12357,27.4,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",883,
+1983/84,1983,6195,13.0,14635,30.8,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",1596,
+1984/85,1984,6468,13.0,15550,31.2,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",2476,
+1985/86,1985,7563,14.1,16553,30.9,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",3197,
+1986/87,1986,8660,15.3,17145,30.3,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",4802,
+1987/88,1987,8863,14.2,17012,27.2,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",5017,
+1988/89,1988,9059,13.1,16455,23.7,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",4919,
+1989/90,1989,8919,11.8,16259,21.5,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",4209,
+1990/91,1990,9818,12.4,17262,21.8,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",4726,
+1991/92,1991,12548,15.3,20041,24.5,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",6611,
+1992/93,1992,15896,18.2,23422,26.8,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",8969,
+1993/94,1993,17981,19.1,25927,27.6,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",10257,
+1994/95,1994,19037,18.9,27050,26.9,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",10181,
+1995/96,1995,19919,18.9,28766,27.2,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",10237,
+1996/97,1996,21275,19.5,29371,27.0,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",11030,
+1997/98,1997,22151,19.4,30355,26.5,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",11488,
+1998/99,1998,23232,20.1,32142,27.8,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",11707,
+1999/00,1999,25206,20.8,34438,28.5,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",13295,
+2000/01,2000,25104,19.1,33788,25.7,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",11578,
+2001/02,2001,27514,20.6,36082,27.0,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",13319,
+2002/03,2002,29383,21.3,36857,26.7,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",14957,
+2003/04,2003,30014,20.6,37775,25.9,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",15180,
+2004/05,2004,28668,18.2,35869,22.7,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",13969,
+2005/06,2005,27251,16.1,34457,20.3,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",11343,
+2006/07,2006,25968,14.2,33439,18.3,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",8889,
+2007/08,2007,26589,13.8,34637,18.0,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",7604,
+2008/09,2008,26446,13.3,38014,19.1,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",5744,
+2009/10,2009,30021,15.6,41885,21.8,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",7359,
+2010/11,2010,31855,15.7,45154,22.2,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",6964,
+2011/12,2011,34692,16.4,50193,23.7,"BC Ministry of Finance, Historical Provincial Debt Summary 1969/70-2011/12 (Table A2.15)",7813,
+2012/13,2012,38182,17.2,55816,25.2,"BC Budget and Fiscal Plan 2019/20-2021/22, Tables A17 & A19",9408,3.9
+2013/14,2013,41068,17.9,60693,26.5,"BC Budget and Fiscal Plan 2019/20-2021/22, Tables A17 & A19",10223,3.7
+2014/15,2014,41880,17.3,62920,26.0,"BC Budget and Fiscal Plan 2019/20-2021/22, Tables A17 & A19",9280,3.7
+2015/16,2015,42719,17.2,65251,26.2,"BC Budget and Fiscal Plan 2019/20-2021/22, Tables A17 & A19",8034,4.0
+2016/17,2016,41499,15.7,65837,24.9,"BC Budget and Fiscal Plan 2019/20-2021/22, Tables A17 & A19",4644,3.2
+2017/18,2017,43607,15.5,64919,23.0,"BC Budget and Fiscal Plan 2019/20-2021/22, Tables A17 & A19",1156,3.3
+2018/19,2018,43957,14.9,67916,23.0,"BC Budget and Fiscal Plan 2019/20-2021/22, Tables A17 & A19 (updated forecast, not final actual)",0,3.1
+2019/20,2019,46229,15.0,72161,23.4,"BC Budget and Fiscal Plan 2026/27-2028/29, Tables A17 & A19",0,3.1
+2020/21,2020,59750,19.4,87100,28.3,"BC Budget and Fiscal Plan 2026/27-2028/29, Tables A17 & A19",8746,3.1
+2021/22,2021,62341,17.5,90666,25.4,"BC Budget and Fiscal Plan 2026/27-2028/29, Tables A17 & A19",7233,2.8
+2022/23,2022,59888,15.0,89380,22.3,"BC Budget and Fiscal Plan 2026/27-2028/29, Tables A17 & A19",0,2.5
+2023/24,2023,75402,18.2,107462,25.9,"BC Budget and Fiscal Plan 2026/27-2028/29, Tables A17 & A19",8729,3.2
+2024/25,2024,99089,23.1,133877,31.2,"BC Budget and Fiscal Plan 2026/27-2028/29, Tables A17 & A19",24516,4.1
+2025/26,2025,116540,26.1,154059,34.5,"BC Budget and Fiscal Plan 2026/27-2028/29, Tables A17 & A19 (updated forecast, not final actual)",31866,4.9
