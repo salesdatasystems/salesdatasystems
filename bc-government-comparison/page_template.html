@@ -1,0 +1,354 @@
+<title>BC Government Record</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+<style>
+/* Layout: one column. Government timeline strip on top, then a single explorer (metric picker, chart with party bands, era table), then the all-indicator matrix, then sources. */
+:root{
+  --bg:#f4f5f7; --surface:#ffffff; --ink:#16202e; --ink2:#4a5568; --muted:#7a8497; --line:#dfe3ea; --grid:#e8ebf0;
+  --bc:#16202e; --ca:#8a94a6;
+  --ndp:#d9822b; --lib:#c2453d; --sc:#4f8a5b; --other:#8a94a6;
+  --ndp-t:rgba(217,130,43,.16); --lib-t:rgba(194,69,61,.14); --sc-t:rgba(79,138,91,.15); --other-t:rgba(138,148,166,.12);
+  --focus:#2f6fdd;
+  --font-body:"Libre Franklin",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-display:"Newsreader",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f141c; --surface:#171e29; --ink:#e8ecf3; --ink2:#b3bccb; --muted:#8792a6; --line:#2a3342; --grid:#222b38;
+  --bc:#e8ecf3; --ca:#7d889c;
+  --ndp:#e8963f; --lib:#e0685f; --sc:#6aab77; --other:#7d889c;
+  --ndp-t:rgba(232,150,63,.20); --lib-t:rgba(224,104,95,.20); --sc-t:rgba(106,171,119,.18); --other-t:rgba(125,136,156,.16);
+  --focus:#6ea2ff; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f141c; --surface:#171e29; --ink:#e8ecf3; --ink2:#b3bccb; --muted:#8792a6; --line:#2a3342; --grid:#222b38;
+  --bc:#e8ecf3; --ca:#7d889c;
+  --ndp:#e8963f; --lib:#e0685f; --sc:#6aab77; --other:#7d889c;
+  --ndp-t:rgba(232,150,63,.20); --lib-t:rgba(224,104,95,.20); --sc-t:rgba(106,171,119,.18); --other-t:rgba(125,136,156,.16);
+  --focus:#6ea2ff; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.5;padding-inline:max(16px,4vw);padding-block:28px 64px}
+.wrap{max-width:1080px;margin-inline:auto;display:flex;flex-direction:column;gap:28px}
+h1{font-family:var(--font-display);font-weight:600;font-size:clamp(28px,5vw,40px);line-height:1.1;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h2{font-size:12px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+p{margin:0}
+.lede{color:var(--ink2);max-width:68ch;margin-top:10px}
+.asof{font-size:12px;color:var(--muted);margin-top:8px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{width:12px;height:12px;border-radius:2px;display:inline-block}
+/* timeline strip */
+#strip{position:relative;height:74px;margin-top:6px}
+#strip .seg{position:absolute;top:0;height:46px;border-radius:3px;border-right:2px solid var(--surface);overflow:hidden;padding:5px 7px;font-size:11.5px;line-height:1.25;color:var(--ink)}
+#strip .seg b{display:block;font-weight:600;font-size:12px}
+#strip .seg i{font-style:normal;color:var(--ink2)}
+#strip .tick{position:absolute;top:50px;font-size:11px;color:var(--muted);transform:translateX(-50%);font-variant-numeric:tabular-nums}
+/* controls */
+.controls{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:end;margin-bottom:14px}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label,.field .lab{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:8px 10px;min-width:240px;max-width:100%}
+.seg-btns{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg-btns button{font:inherit;font-size:13px;color:var(--ink2);background:var(--surface);border:0;border-right:1px solid var(--line);padding:8px 12px;cursor:pointer}
+.seg-btns button:last-child{border-right:0}
+.seg-btns button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+button:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.metric-title{font-size:18px;font-weight:600;margin:0}
+.metric-desc{color:var(--ink2);font-size:13px;margin:2px 0 12px;max-width:80ch}
+/* chart */
+#chartbox{position:relative;width:100%}
+#chart{display:block;width:100%;height:auto;touch-action:pan-y}
+#tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:12.5px;line-height:1.4;box-shadow:0 4px 18px rgba(0,0,0,.16);min-width:160px;max-width:240px;z-index:3}
+#tip .t1{font-weight:600}
+#tip .t2{color:var(--ink2);margin-bottom:5px}
+#tip .r{display:flex;justify-content:space-between;gap:14px;font-variant-numeric:tabular-nums}
+#tip .k{display:inline-flex;align-items:center;gap:6px;color:var(--ink2)}
+.line-key{width:14px;height:0;border-top:2px solid var(--bc);display:inline-block}
+.line-key.ca{border-top:2px dashed var(--ca)}
+.note{font-size:12.5px;color:var(--muted);margin-top:10px;max-width:90ch}
+/* tables */
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
+th,td{text-align:right;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+#eraTable td:nth-child(2),#eraTable th:nth-child(2){text-align:left}
+thead th{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);vertical-align:bottom;white-space:normal}
+td .sub{display:block;font-size:11.5px;color:var(--muted)}
+.erahead{display:inline-flex;align-items:center;gap:8px}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+tbody tr:last-child td{border-bottom:0}
+.na{color:var(--muted)}
+.arrow{font-size:10px;color:var(--muted);margin-right:4px}
+details{margin-top:12px}
+summary{cursor:pointer;color:var(--ink2);font-size:13px}
+.copy{font:inherit;font-size:12.5px;color:var(--ink2);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 10px;cursor:pointer;margin-left:8px}
+.sources li{margin-bottom:8px;color:var(--ink2);font-size:13.5px}
+.sources ul{margin:0;padding-left:18px}
+.method p{color:var(--ink2);font-size:13.5px;margin-bottom:8px;max-width:88ch}
+.method h3{font-size:13.5px;margin:14px 0 4px}
+a{color:var(--focus)}
+@media (max-width:640px){#strip .seg{font-size:10.5px;padding:4px 5px}#strip .seg b{font-size:11px}.panel{padding:14px}select{min-width:0;width:100%}.field{flex:1 1 100%}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>BC Government Record</h1>
+    <p class="lede">Economic and fiscal figures for British Columbia, laid out year by year against whichever party held government. The page presents the numbers and the dates. It does not score or rank anyone.</p>
+    <p class="asof" id="asof"></p>
+  </header>
+
+  <section class="panel" aria-labelledby="h-gov">
+    <h2 id="h-gov">Who governed, 1969 to today</h2>
+    <div id="strip" role="img" aria-label="Timeline of BC premiers and parties"></div>
+    <div class="legend" id="partyLegend" style="margin-top:6px"></div>
+    <p class="note">The BC Conservatives have not formed a government. They are the Official Opposition after the 2024 election, so they have no governing record to show here.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="h-exp">
+    <h2 id="h-exp">Explore one measure</h2>
+    <div class="controls">
+      <div class="field"><label for="metric">Measure</label><select id="metric"></select></div>
+      <div class="field"><span class="lab">Compare</span>
+        <div class="seg-btns" id="cmp"><button data-v="bc" aria-pressed="true">BC only</button><button data-v="both" aria-pressed="false">BC and Canada</button></div></div>
+      <div class="field"><span class="lab">Years shown</span>
+        <div class="seg-btns" id="rng"><button data-v="all" aria-pressed="true">All available</button><button data-v="1991" aria-pressed="false">1991 on</button><button data-v="2001" aria-pressed="false">2001 on</button></div></div>
+    </div>
+    <h3 class="metric-title" id="mTitle"></h3>
+    <p class="metric-desc" id="mDesc"></p>
+    <div id="chartbox"><svg id="chart" role="img" aria-label="Line chart"></svg><div id="tip" hidden></div></div>
+    <div class="legend" id="lineLegend" style="margin-top:8px"></div>
+    <p class="note" id="mNote"></p>
+
+    <h2 style="margin-top:22px">By government</h2>
+    <div class="tablewrap"><table id="eraTable"></table></div>
+    <details><summary>Show the year-by-year table</summary>
+      <div style="margin:10px 0"><button class="copy" id="copyCsv" type="button">Copy as CSV</button><span class="note" id="copyMsg" style="margin-left:8px"></span></div>
+      <div class="tablewrap" style="max-height:420px;overflow:auto"><table id="yearTable"></table></div>
+    </details>
+  </section>
+
+  <section class="panel" aria-labelledby="h-mat">
+    <h2 id="h-mat">Every measure, every government</h2>
+    <p class="note" style="margin:0 0 12px">Each cell is the change over that government's years in office, measured from the last year of the government before it. Cells showing a rate (unemployment, inflation) give the average or the change in percentage points, as labelled. A dash means the data does not cover those years.</p>
+    <div class="tablewrap"><table id="matrix"></table></div>
+  </section>
+
+  <section class="panel method" aria-labelledby="h-meth">
+    <h2 id="h-meth">How the figures are attributed</h2>
+    <p>Each calendar-year figure is assigned to the party in office on July 1 of that year. Each fiscal-year figure (debt, fiscal years ending March 31) is assigned to the party in office on October 1 of the year the fiscal year starts. Handover years therefore go to the party in office at the midpoint. Every row in the tables names the exact baseline and end year it compares, so you can check the choice.</p>
+    <p>A government's change is measured from the last year assigned to the previous party to the last year assigned to that government. For the first government in a data series, the change starts at the first year the data exists. The current government's figures run to the latest year published.</p>
+    <p>Dollar figures labelled "real" are adjusted for inflation with the BC Consumer Price Index (2022 dollars) unless the label says otherwise. GDP and GDP per person use Statistics Canada's chained 2017 dollars.</p>
+    <h3>Known gaps and breaks</h3>
+    <p>Debt comes from three BC government publications with slightly different definitions and GDP revisions, so there are small steps where they join (2011/12 to 2012/13, and 2018/19 to 2019/20). The 2025/26 debt figure is an updated forecast, not a final audited actual. Wage data from Statistics Canada ends in 2022 in the table used here. The minimum wage series is currently in constant 2013 dollars and ends in 2013; the nominal rate history and the years after 2013 are not loaded yet.</p>
+  </section>
+
+  <section class="panel sources" aria-labelledby="h-src">
+    <h2 id="h-src">Sources</h2>
+    <ul id="srcList"></ul>
+  </section>
+</div>
+
+<script>
+const D = /*DATA*/;
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=id=>document.getElementById(id);
+const PARTY={"NDP":{k:"ndp",name:"BC NDP"},"BC Liberal":{k:"lib",name:"BC Liberals"},"Social Credit":{k:"sc",name:"Social Credit"}};
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function dec(s){const d=new Date(s+"T00:00:00Z");const y=d.getUTCFullYear();const a=Date.UTC(y,0,1),b=Date.UTC(y+1,0,1);return y+(d-a)/(b-a);}
+const NOW=2026.76;
+const govs=D.governments.map(g=>({...g,s:dec(g.start),e:g.end?dec(g.end):NOW}));
+// party eras: merge consecutive same-party governments
+const eras=[];
+govs.forEach(g=>{const l=eras[eras.length-1];if(l&&l.party===g.party){l.e=g.e;l.end=g.end;l.premiers.push(g.premier);}else eras.push({party:g.party,s:g.s,e:g.e,start:g.start,end:g.end,premiers:[g.premier]});});
+eras.forEach((e,i)=>{e.id=i;e.key=PARTY[e.party].k;});
+function eraAt(x){for(const e of eras)if(x>=e.s&&x<e.e)return e;return null;}
+function govAt(x){for(const g of govs)if(x>=g.s&&x<g.e)return g;return null;}
+const yr=s=>s?s.slice(0,4):"";
+// ---------- metrics
+const M=D.metrics;
+const fmt={
+ int:v=>Math.round(v).toLocaleString("en-CA"),
+ d0:v=>"$"+Math.round(v).toLocaleString("en-CA"),
+ d2:v=>"$"+v.toFixed(2),
+ b1:v=>"$"+v.toFixed(1)+"B",
+ p1:v=>v.toFixed(1)+"%",
+ k0:v=>Math.round(v).toLocaleString("en-CA")+"k",
+ m:v=>"$"+(v/1000).toFixed(1)+"B",
+ pop:v=>(v/1e6).toFixed(2)+"M"
+};
+const keys=Object.keys(M);
+const sel=$("metric");
+const groups=[...new Set(keys.map(k=>M[k].group))];
+groups.forEach(g=>{const og=document.createElement("optgroup");og.label=g;keys.filter(k=>M[k].group===g).forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=M[k].label;og.appendChild(o);});sel.appendChild(og);});
+const state={m:keys[0],cmp:"bc",rng:"all"};
+try{const s=JSON.parse(localStorage.getItem("bcrec")||"{}");if(s.m&&M[s.m])state.m=s.m;if(s.cmp)state.cmp=s.cmp;if(s.rng)state.rng=s.rng;}catch(e){}
+function save(){try{localStorage.setItem("bcrec",JSON.stringify(state));}catch(e){}}
+// x position of a data year for a metric
+const xOf=(m,y)=>M[m].basis==="fiscal"?y+0.75:y+0.5;
+function pts(m,geo){const o=M[m][geo];if(!o)return[];return Object.keys(o).map(Number).sort((a,b)=>a-b).filter(y=>o[y]!=null).map(y=>({y,x:xOf(m,y),v:o[y]}));}
+function valAt(m,geo,y){const o=M[m][geo];return o&&o[y]!=null?o[y]:null;}
+function short(m,y){return M[m].basis==="fiscal"?`${y}/${String(y+1).slice(2)}`:String(y);}
+function yrLabel(m,y){return M[m].basis==="fiscal"?`FY ${y}/${String(y+1).slice(2)}`:String(y);}
+// ---------- timeline strip
+function drawStrip(){
+ const el=$("strip");el.innerHTML="";const x0=1969,x1=NOW;const W=el.clientWidth;const sx=x=>(x-x0)/(x1-x0)*W;
+ govs.forEach(g=>{const s=Math.max(g.s,x0),e=g.e;const d=document.createElement("div");d.className="seg";const k=PARTY[g.party].k;
+  d.style.left=sx(s)+"px";d.style.width=Math.max(2,sx(e)-sx(s))+"px";d.style.background=`var(--${k}-t)`;d.style.borderTop=`3px solid var(--${k})`;
+  const w=sx(e)-sx(s);const last=g.premier.split(" ").slice(-1)[0];
+  d.title=`${g.premier}, ${PARTY[g.party].name}, ${yr(g.start)}–${g.end?yr(g.end):"present"}`;
+  if(w>=40)d.innerHTML=`<b>${w>86?g.premier:last}</b>`+(w>=64?`<i>${yr(g.start)}–${g.end?yr(g.end):"now"}</i>`:"");
+  el.appendChild(d);});
+ [1970,1980,1990,2000,2010,2020].forEach(y=>{const t=document.createElement("div");t.className="tick";t.style.left=sx(y)+"px";t.textContent=y;el.appendChild(t);});
+}
+function drawPartyLegend(){const l=$("partyLegend");l.innerHTML="";Object.keys(PARTY).forEach(p=>{const s=document.createElement("span");s.innerHTML=`<i class="sw" style="background:var(--${PARTY[p].k})"></i>${PARTY[p].name}`;l.appendChild(s);});}
+// ---------- chart
+function nice(lo,hi,n){const span=hi-lo||1;const raw=span/n;const p=Math.pow(10,Math.floor(Math.log10(raw)));const f=raw/p;const st=(f<1.5?1:f<3?2:f<7?5:10)*p;const a=Math.floor(lo/st)*st,b=Math.ceil(hi/st)*st;const t=[];for(let v=a;v<=b+st/2;v+=st)t.push(+v.toFixed(10));return t;}
+function el(n,a,p){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+let view=null;
+function currentSeries(){
+ const m=M[state.m];const both=state.cmp==="both"&&m.ca;
+ const minX=state.rng==="all"?-1:+state.rng;
+ let bc=pts(state.m,"bc").filter(p=>p.y>=minX);let ca=both?pts(state.m,"ca").filter(p=>p.y>=minX):[];
+ let indexed=false;
+ if(both&&m.indexable){indexed=true;const yrs=new Set(ca.map(p=>p.y));const common=bc.filter(p=>yrs.has(p.y));if(common.length){const y0=common[0].y;const b0=valAt(state.m,"bc",y0),c0=valAt(state.m,"ca",y0);bc=bc.map(p=>({...p,raw:p.v,v:p.v/b0*100}));ca=ca.map(p=>({...p,raw:p.v,v:p.v/c0*100}));view_base=y0;}}
+ return {bc,ca,both,indexed};
+}
+let view_base=null;
+function drawChart(){
+ const m=M[state.m];const S=currentSeries();const svg=$("chart");svg.innerHTML="";
+ const W=Math.max(300,$("chartbox").clientWidth),H=W<520?300:380;svg.setAttribute("viewBox",`0 0 ${W} ${H}`);svg.setAttribute("height",H);
+ const mar={l:W<520?44:58,r:14,t:26,b:28};const iw=W-mar.l-mar.r,ih=H-mar.t-mar.b;
+ const all=S.bc.concat(S.ca);if(!all.length)return;
+ let xmin=Math.min(...all.map(p=>p.x)),xmax=Math.max(...all.map(p=>p.x));
+ xmin=Math.floor(xmin);xmax=Math.max(Math.ceil(xmax),xmin+1);
+ let vmin=Math.min(...all.map(p=>p.v)),vmax=Math.max(...all.map(p=>p.v));
+ if(m.zero!==false)vmin=Math.min(vmin,0);
+ const ticks=nice(vmin,vmax,5);const ymin=ticks[0],ymax=ticks[ticks.length-1];
+ const sx=x=>mar.l+(x-xmin)/(xmax-xmin)*iw,sy=v=>mar.t+ih-(v-ymin)/(ymax-ymin)*ih;
+ view={S,sx,sy,xmin,xmax,mar,iw,ih,W,H};
+ // bands
+ eras.forEach(e=>{const a=Math.max(e.s,xmin),b=Math.min(e.e,xmax);if(b<=a)return;
+  el("rect",{x:sx(a),y:mar.t,width:sx(b)-sx(a),height:ih,fill:`var(--${e.key}-t)`},svg);
+  const w=sx(b)-sx(a);if(w>58){const t=el("text",{x:sx(a)+6,y:mar.t+13,fill:`var(--${e.key})`,"font-size":11,"font-weight":600},svg);t.textContent=PARTY[e.party].name;}
+  if(a>xmin+0.01)el("line",{x1:sx(a),x2:sx(a),y1:mar.t,y2:mar.t+ih,stroke:"var(--surface)","stroke-width":2},svg);});
+ // grid + y labels
+ ticks.forEach(t=>{el("line",{x1:mar.l,x2:mar.l+iw,y1:sy(t),y2:sy(t),stroke:"var(--grid)","stroke-width":1},svg);
+  const tx=el("text",{x:mar.l-7,y:sy(t)+4,"text-anchor":"end",fill:"var(--muted)","font-size":11},svg);tx.textContent=yTick(m,t,S.indexed);});
+ const step=(xmax-xmin)>35?10:5;for(let y=Math.ceil(xmin/step)*step;y<=xmax;y+=step){const tx=el("text",{x:sx(y),y:H-8,"text-anchor":"middle",fill:"var(--muted)","font-size":11},svg);tx.textContent=y;}
+ el("line",{x1:mar.l,x2:mar.l+iw,y1:mar.t+ih,y2:mar.t+ih,stroke:"var(--line)"},svg);
+ const path=pp=>pp.map((p,i)=>(i?"L":"M")+sx(p.x).toFixed(1)+" "+sy(p.v).toFixed(1)).join("");
+ if(S.ca.length)el("path",{d:path(S.ca),fill:"none",stroke:"var(--ca)","stroke-width":2,"stroke-dasharray":"5 4","stroke-linejoin":"round"},svg);
+ if(S.bc.length)el("path",{d:path(S.bc),fill:"none",stroke:"var(--bc)","stroke-width":2.2,"stroke-linejoin":"round","stroke-linecap":"round"},svg);
+ if(S.bc.length<=40)S.bc.forEach(p=>el("circle",{cx:sx(p.x),cy:sy(p.v),r:2.6,fill:"var(--bc)",stroke:"var(--surface)","stroke-width":1.5},svg));
+ // end-label
+ const last=S.bc[S.bc.length-1];if(last){const t=el("text",{x:Math.min(sx(last.x),W-mar.r),y:sy(last.v)-9,"text-anchor":"end",fill:"var(--ink)","font-size":11.5,"font-weight":600},svg);t.textContent=(S.indexed?last.v.toFixed(0):fmtVal(m,last.v));}
+ // hover layer
+ const cross=el("line",{y1:mar.t,y2:mar.t+ih,stroke:"var(--ink2)","stroke-width":1,"stroke-dasharray":"3 3",visibility:"hidden"},svg);
+ const dotB=el("circle",{r:4.5,fill:"var(--bc)",stroke:"var(--surface)","stroke-width":2,visibility:"hidden"},svg);
+ const dotC=el("circle",{r:4,fill:"var(--ca)",stroke:"var(--surface)","stroke-width":2,visibility:"hidden"},svg);
+ const hit=el("rect",{x:mar.l,y:mar.t,width:iw,height:ih,fill:"transparent"},svg);
+ const tip=$("tip");
+ function move(ev){const r=svg.getBoundingClientRect();const px=(ev.clientX-r.left)*(W/r.width);const x=xmin+(px-mar.l)/iw*(xmax-xmin);
+  const base=S.bc.length?S.bc:S.ca;let best=null,bd=1e9;base.forEach(p=>{const d=Math.abs(p.x-x);if(d<bd){bd=d;best=p;}});if(!best)return;
+  const cpt=S.ca.find(p=>p.y===best.y);
+  cross.setAttribute("x1",sx(best.x));cross.setAttribute("x2",sx(best.x));cross.setAttribute("visibility","visible");
+  dotB.setAttribute("cx",sx(best.x));dotB.setAttribute("cy",sy(best.v));dotB.setAttribute("visibility",S.bc.includes(best)?"visible":"hidden");
+  if(cpt){dotC.setAttribute("cx",sx(cpt.x));dotC.setAttribute("cy",sy(cpt.v));dotC.setAttribute("visibility","visible");}else dotC.setAttribute("visibility","hidden");
+  const g=govAt(best.x),e=eraAt(best.x);
+  let h=`<div class="t1">${yrLabel(state.m,best.y)}</div><div class="t2">${e?PARTY[e.party].name:""}${g?" · "+g.premier:""}</div>`;
+  h+=`<div class="r"><span class="k"><i class="line-key"></i>BC</span><b>${S.bc.includes(best)?valTxt(m,best,S.indexed):"—"}</b></div>`;
+  if(cpt)h+=`<div class="r"><span class="k"><i class="line-key ca"></i>Canada</span><b>${valTxt(m,cpt,S.indexed)}</b></div>`;
+  tip.innerHTML=h;tip.hidden=false;
+  const bw=$("chartbox").clientWidth;const tx=sx(best.x)*(r.width/W);let left=tx+14;if(left+tip.offsetWidth>bw)left=tx-tip.offsetWidth-14;tip.style.left=Math.max(0,left)+"px";tip.style.top=(mar.t+8)*(r.width/W)+"px";}
+ function leave(){cross.setAttribute("visibility","hidden");dotB.setAttribute("visibility","hidden");dotC.setAttribute("visibility","hidden");tip.hidden=true;}
+ hit.addEventListener("pointermove",move);hit.addEventListener("pointerdown",move);hit.addEventListener("pointerleave",leave);
+}
+function fmtVal(m,v){return fmt[m.fmt](v);}
+function yTick(m,t,idx){if(idx)return t.toFixed(0);const f=m.fmt;if(f==="p1")return t+"%";if(f==="d0"||f==="d2")return "$"+(Math.abs(t)>=1000?(t/1000)+"k":t);if(f==="m")return "$"+(t/1000)+"B";if(f==="b1")return "$"+t+"B";if(f==="k0")return t>=1000?(t/1000)+"M":t+"k";if(f==="pop")return (t/1e6)+"M";return t;}
+function valTxt(m,p,idx){return idx?`${p.v.toFixed(1)} <span class="na">(${fmtVal(m,p.raw)})</span>`:fmtVal(m,p.v);}
+// ---------- era statistics
+function eraStats(mk,geo){
+ const m=M[mk];const P=pts(mk,geo);if(!P.length)return eras.map(()=>null);
+ const byEra=eras.map(e=>P.filter(p=>eraAt(p.x)===e));
+ return eras.map((e,i)=>{
+  const mine=byEra[i];if(!mine.length)return null;
+  let baseP=null;for(let j=i-1;j>=0;j--){if(byEra[j].length){baseP=byEra[j][byEra[j].length-1];break;}}
+  const firstBase=!baseP;if(firstBase)baseP=mine[0];
+  const endP=mine[mine.length-1];
+  const n=endP.y-baseP.y;
+  let change=null,per=null;
+  if(n>0){ if(m.delta==="pct"){change=(endP.v/baseP.v-1)*100;per=(Math.pow(endP.v/baseP.v,1/n)-1)*100;} else {change=endP.v-baseP.v;per=change/n;} }
+  const avg=mine.reduce((a,p)=>a+p.v,0)/mine.length;
+  return {base:baseP,end:endP,firstBase,change,per,avg,n:mine.length,partial:e.e>=NOW-0.01};
+ });
+}
+function sgn(v,d,u){if(v==null)return "—";const s=v>0?"+":v<0?"−":"";return s+Math.abs(v).toFixed(d)+u;}
+function arrow(v){return v==null||Math.abs(v)<0.005?"":v>0?'<span class="arrow">▲</span>':'<span class="arrow">▼</span>';}
+function eraHead(e){return `<span class="erahead"><i class="dot" style="background:var(--${e.key})"></i><span>${PARTY[e.party].name}<span class="sub" style="display:block;font-size:11px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--muted)">${yr(e.start)}–${e.end?yr(e.end):"now"}</span></span></span>`;}
+function drawEraTable(){
+ const m=M[state.m];const t=$("eraTable");const bcS=eraStats(state.m,"bc");const caS=m.ca?eraStats(state.m,"ca"):null;const pct=m.delta==="pct";
+ const unit=pct?"%":(m.fmt==="p1"?" pts":"");
+ let h=`<thead><tr><th>Government</th><th>Premiers</th><th>Starts from</th><th>Ends at</th><th>Change</th><th>${pct?"Per year (compound)":"Per year"}</th><th>Average over years in office</th>${caS?"<th>Canada: change</th>":""}</tr></thead><tbody>`;
+ eras.forEach((e,i)=>{const s=bcS[i];
+  if(!s){h+=`<tr><td>${eraHead(e)}</td><td class="na">${e.premiers.join(", ")}</td><td colspan="${caS?5:4}" class="na">No data for these years</td></tr>`;return;}
+  const c=caS&&caS[i];
+  h+=`<tr><td>${eraHead(e)}</td><td style="white-space:normal;min-width:130px">${e.premiers.join(", ")}</td>
+  <td>${fmtVal(m,s.base.v)}<span class="sub">${yrLabel(state.m,s.base.y)}${s.firstBase?" (first data year)":""}</span></td>
+  <td>${fmtVal(m,s.end.v)}<span class="sub">${yrLabel(state.m,s.end.y)}${s.partial?" (latest)":""}</span></td>
+  <td>${arrow(s.change)}${sgn(s.change,pct?1:2,unit)}</td><td>${sgn(s.per,pct?2:2,pct?"%":(m.fmt==="p1"?" pts":""))}</td><td>${fmtVal(m,s.avg)}</td>
+  ${caS?`<td>${c&&c.change!=null?arrow(c.change)+sgn(c.change,pct?1:2,unit):"—"}</td>`:""}</tr>`;});
+ t.innerHTML=h+"</tbody>";
+}
+function drawYearTable(){
+ const m=M[state.m];const t=$("yearTable");const ys=new Set();["bc","ca"].forEach(g=>{if(m[g])Object.keys(m[g]).forEach(y=>{if(m[g][y]!=null)ys.add(+y);});});
+ const list=[...ys].sort((a,b)=>b-a);
+ let h=`<thead><tr><th>${m.basis==="fiscal"?"Fiscal year":"Year"}</th><th>Government</th><th>BC</th>${m.ca?"<th>Canada</th>":""}</tr></thead><tbody>`;
+ list.forEach(y=>{const x=xOf(state.m,y);const e=eraAt(x),g=govAt(x);const b=valAt(state.m,"bc",y),c=m.ca?valAt(state.m,"ca",y):null;
+  h+=`<tr><td>${yrLabel(state.m,y)}</td><td>${e?PARTY[e.party].name:""}${g?`<span class="sub">${g.premier}</span>`:""}</td><td>${b==null?"—":fmtVal(m,b)}</td>${m.ca?`<td>${c==null?"—":fmtVal(m,c)}</td>`:""}</tr>`;});
+ t.innerHTML=h+"</tbody>";
+}
+function csvText(){const m=M[state.m];const ys=new Set();["bc","ca"].forEach(g=>{if(m[g])Object.keys(m[g]).forEach(y=>{if(m[g][y]!=null)ys.add(+y);});});
+ const rows=[["year","party","premier","bc"+(m.ca?",canada":"")].join(",")];
+ [...ys].sort((a,b)=>a-b).forEach(y=>{const x=xOf(state.m,y);const e=eraAt(x),g=govAt(x);rows.push([y,e?PARTY[e.party].name:"",g?g.premier:"",valAt(state.m,"bc",y)??""].concat(m.ca?[valAt(state.m,"ca",y)??""]:[]).join(","));});
+ return rows.join("\n");}
+// ---------- matrix
+function drawMatrix(){
+ const t=$("matrix");let h=`<thead><tr><th>Measure</th>${eras.map(e=>`<th>${eraHead(e)}</th>`).join("")}</tr></thead><tbody>`;
+ let grp="";
+ keys.forEach(k=>{const m=M[k];if(m.group!==grp){grp=m.group;h+=`<tr><td colspan="${eras.length+1}" style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--bg)">${grp}</td></tr>`;}
+  const st=eraStats(k,"bc");const pct=m.delta==="pct";const avgMode=m.stat==="avg";
+  h+=`<tr><td style="white-space:normal;min-width:190px">${m.short||m.label}<span class="sub">${avgMode?"average over years in office":pct?"% change":(m.fmt==="p1"?"change, percentage points":"change")}</span></td>`;
+  st.forEach(s=>{if(!s){h+=`<td class="na">—</td>`;return;}
+   if(avgMode){h+=`<td>${s.avg.toFixed(1)}${m.fmt==="p1"?"%":""}<span class="sub">${s.base.y}–${s.end.y}</span></td>`;return;}
+   h+=`<td>${arrow(s.change)}${sgn(s.change,1,pct?"%":(m.fmt==="p1"?" pts":""))}<span class="sub">${short(k,s.base.y)}→${short(k,s.end.y)}</span></td>`;});
+  h+="</tr>";});
+ t.innerHTML=h+"</tbody>";
+}
+// ---------- wiring
+function renderAll(){
+ const m=M[state.m];$("mTitle").textContent=m.label;$("mDesc").textContent=m.desc;
+ const cmpBtns=$("cmp").querySelectorAll("button");cmpBtns.forEach(b=>{const dis=b.dataset.v==="both"&&!m.ca;b.disabled=dis;b.style.opacity=dis?.4:1;});
+ if(!m.ca&&state.cmp==="both")state.cmp="bc";
+ $("cmp").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===state.cmp)));
+ $("rng").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===state.rng)));
+ sel.value=state.m;
+ const S=currentSeries();
+ $("lineLegend").innerHTML=`<span><i class="line-key"></i>British Columbia${S.indexed?" (indexed)":""}</span>`+(S.both?`<span><i class="line-key ca"></i>Canada${S.indexed?" (indexed)":""}</span>`:"");
+ let note=m.note||"";if(S.indexed)note+=(note?" ":"")+`Both lines are indexed to 100 in ${view_base}, because BC and Canada are on different scales. Tooltip values in brackets are the actual figures.`;
+ $("mNote").textContent=note;
+ drawChart();drawEraTable();drawYearTable();
+}
+sel.addEventListener("change",()=>{state.m=sel.value;save();renderAll();});
+$("cmp").addEventListener("click",e=>{const b=e.target.closest("button");if(!b||b.disabled)return;state.cmp=b.dataset.v;save();renderAll();});
+$("rng").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;state.rng=b.dataset.v;save();renderAll();});
+$("copyCsv").addEventListener("click",()=>{const txt=csvText();const done=ok=>{$("copyMsg").textContent=ok?"Copied.":"Copy was blocked. Select the table rows instead.";};
+ try{navigator.clipboard.writeText(txt).then(()=>done(true),()=>done(false));}catch(e){done(false);}});
+let rt;window.addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>{drawStrip();drawChart();},120);});
+// sources + as-of
+$("asof").textContent="Data as of "+D.asof+". Sources: Statistics Canada and the BC Ministry of Finance.";
+$("srcList").innerHTML=D.sources.map(s=>`<li>${s}</li>`).join("");
+drawPartyLegend();drawStrip();drawMatrix();renderAll();
+})();
+</script>
