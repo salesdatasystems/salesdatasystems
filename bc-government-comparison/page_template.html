@@ -133,6 +133,12 @@ a{color:var(--focus)}
     <div class="tablewrap"><table id="matrix"></table></div>
   </section>
 
+  <section class="panel" aria-labelledby="h-split">
+    <h2 id="h-split">Where taxpayer-supported debt came from</h2>
+    <p class="note" style="margin:0 0 12px">Operating debt is borrowing to cover everyday spending deficits. Capital and other debt finances buildings, schools, hospitals, transit and other assets. Changes run from the last year of the previous government to the last year of this one, in current dollars, so older figures look small partly because of inflation.</p>
+    <div class="tablewrap"><table id="split"></table></div>
+  </section>
+
   <section class="panel method" aria-labelledby="h-meth">
     <h2 id="h-meth">How the figures are attributed</h2>
     <p>Each calendar-year figure is assigned to the party in office on July 1 of that year. Each fiscal-year figure (debt, fiscal years ending March 31) is assigned to the party in office on October 1 of the year the fiscal year starts. Handover years therefore go to the party in office at the midpoint. Every row in the tables names the exact baseline and end year it compares, so you can check the choice.</p>
@@ -328,6 +334,15 @@ function drawMatrix(){
   h+="</tr>";});
  t.innerHTML=h+"</tbody>";
 }
+function bn(v){return (v>0?"+":v<0?"−":"")+"$"+Math.abs(v/1000).toFixed(1)+"B";}
+function drawSplit(){
+ const t=$("split");const tot=eraStats("debt_tp_m","bc"),op=eraStats("debt_op_m","bc"),cp=eraStats("debt_cap_m","bc");
+ let h='<thead><tr><th>Government</th><th>Fiscal years compared</th><th>Total change</th><th>Operating debt change</th><th>Capital and other change</th><th>Operating debt at end</th></tr></thead><tbody>';
+ eras.forEach((e,i)=>{const a=tot[i],b=op[i],c=cp[i];if(!a||!b||!c)return;
+  h+=`<tr><td>${eraHead(e)}</td><td>${short("debt_tp_m",a.base.y)} to ${short("debt_tp_m",a.end.y)}${a.firstBase?'<span class="sub">first data year to end</span>':""}${a.partial?'<span class="sub">latest is a forecast</span>':""}</td>
+  <td>${bn(a.end.v-a.base.v)}</td><td>${bn(b.end.v-b.base.v)}<span class="sub">${fmtVal(M.debt_op_m,b.base.v)} to ${fmtVal(M.debt_op_m,b.end.v)}</span></td><td>${bn(c.end.v-c.base.v)}</td><td>${fmtVal(M.debt_op_m,b.end.v)}</td></tr>`;});
+ t.innerHTML=h+"</tbody>";
+}
 // ---------- wiring
 function renderAll(){
  const m=M[state.m];$("mTitle").textContent=m.label;$("mDesc").textContent=m.desc;
@@ -351,6 +366,6 @@ let rt;window.addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>
 // sources + as-of
 $("asof").textContent="Data as of "+D.asof+". Sources: Statistics Canada and the BC Ministry of Finance.";
 $("srcList").innerHTML=D.sources.map(s=>`<li>${s}</li>`).join("");
-drawPartyLegend();drawStrip();drawMatrix();renderAll();
+drawPartyLegend();drawStrip();drawMatrix();drawSplit();renderAll();
 })();
 </script>
