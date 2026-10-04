@@ -8,3 +8,5 @@
 - Debt 2012/13-2018/19: BC Budget and Fiscal Plan 2019/20-2021/22, Tables A17, A19. Debt 2019/20-2025/26: BC Budget and Fiscal Plan 2026/27-2028/29, Tables A17, A19 (2025/26 is an updated forecast).
 - Minimum wage (real, constant 2013 dollars), average hourly earnings and their ratio, 1983-2013: Statistics Canada, Perspectives on Labour and Income 75-006-X, 2014001, article 14035, Table A.1.
 - Premiers and dates: Wikipedia, List of premiers of British Columbia (cross-check against elections.bc.ca).
+- BC general hourly minimum wage since 1965: Employment and Social Development Canada, Historical Minimum Wage Rates in Canada (open.canada.ca, dataset 390ee890-59bb-4f34-a37c-9732781ef8a0). The source dates the $17.85 rate 2026-06-01 (duplicate of the $18.25 row); data/minwage_bc_nominal.csv corrects it to 2025-06-01.
+- Inflation adjustment: Statistics Canada 18-10-0005-01, Canada all-items CPI (data/cpi_canada_annual.csv, 1914-2025), 2025 dollars. Fiscal years use a CPI weighted 9 months to the starting calendar year and 3 months to the next.
