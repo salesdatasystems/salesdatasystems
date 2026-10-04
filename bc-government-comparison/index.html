@@ -129,7 +129,8 @@ a{color:var(--focus)}
 
   <section class="panel" aria-labelledby="h-mat">
     <h2 id="h-mat">Every measure, every government</h2>
-    <p class="note" style="margin:0 0 12px">Each cell is the change over that government's years in office, measured from the last year of the government before it. Cells showing a rate (unemployment, inflation) give the average or the change in percentage points, as labelled. A dash means the data does not cover those years.</p>
+    <div class="controls" style="margin-bottom:10px"><div class="field"><span class="lab">Show</span><div class="seg-btns" id="mxMode"><button data-v="end" aria-pressed="true">Value at end of government</button><button data-v="change" aria-pressed="false">Change over the term</button></div></div></div>
+    <p class="note" id="mxNote" style="margin:0 0 12px"></p>
     <div class="tablewrap"><table id="matrix"></table></div>
   </section>
 
@@ -190,8 +191,8 @@ const keys=Object.keys(M);
 const sel=$("metric");
 const groups=[...new Set(keys.map(k=>M[k].group))];
 groups.forEach(g=>{const og=document.createElement("optgroup");og.label=g;keys.filter(k=>M[k].group===g).forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=M[k].label;og.appendChild(o);});sel.appendChild(og);});
-const state={m:keys[0],cmp:"bc",rng:"all",split:"nom"};
-try{const s=JSON.parse(localStorage.getItem("bcrec")||"{}");if(s.m&&M[s.m])state.m=s.m;if(s.cmp)state.cmp=s.cmp;if(s.rng)state.rng=s.rng;if(s.split)state.split=s.split;}catch(e){}
+const state={m:keys[0],cmp:"bc",rng:"all",split:"nom",mx:"end"};
+try{const s=JSON.parse(localStorage.getItem("bcrec")||"{}");if(s.m&&M[s.m])state.m=s.m;if(s.cmp)state.cmp=s.cmp;if(s.rng)state.rng=s.rng;if(s.split)state.split=s.split;if(s.mx)state.mx=s.mx;}catch(e){}
 function save(){try{localStorage.setItem("bcrec",JSON.stringify(state));}catch(e){}}
 // x position of a data year for a metric
 const xOf=(m,y)=>M[m].basis==="fiscal"?y+0.75:y+0.5;
@@ -299,13 +300,14 @@ function arrow(v){return v==null||Math.abs(v)<0.005?"":v>0?'<span class="arrow">
 function eraHead(e){return `<span class="erahead"><i class="dot" style="background:var(--${e.key})"></i><span>${PARTY[e.party].name}<span class="sub" style="display:block;font-size:11px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--muted)">${yr(e.start)}–${e.end?yr(e.end):"now"}</span></span></span>`;}
 function drawEraTable(){
  const m=M[state.m];const t=$("eraTable");const bcS=eraStats(state.m,"bc");const caS=m.ca?eraStats(state.m,"ca"):null;const pct=m.delta==="pct";
-  let h=`<thead><tr><th>Government</th><th>Premiers</th><th>Starts from</th><th>Ends at</th><th>Change</th><th>${pct?"Per year (compound)":"Per year"}</th><th>Average over years in office</th>${caS?"<th>Canada: change</th>":""}</tr></thead><tbody>`;
+ const gov=e=>`<span class="erahead"><i class="dot" style="background:var(--${e.key})"></i><span>${PARTY[e.party].name}<span class="sub">${yr(e.start)}–${e.end?yr(e.end):"now"}</span><span class="sub" style="white-space:normal;min-width:120px">${e.premiers.join(", ")}</span></span></span>`;
+ let h=`<thead><tr><th>Government</th><th>Ends at</th><th>Starts from</th><th>Change</th><th>${pct?"Per year (compound)":"Per year"}</th><th>Average over years in office</th>${caS?"<th>Canada: change</th>":""}</tr></thead><tbody>`;
  eras.forEach((e,i)=>{const s=bcS[i];
-  if(!s){h+=`<tr><td>${eraHead(e)}</td><td class="na">${e.premiers.join(", ")}</td><td colspan="${caS?5:4}" class="na">No data for these years</td></tr>`;return;}
+  if(!s){h+=`<tr><td>${gov(e)}</td><td colspan="${caS?6:5}" class="na" style="text-align:left">No data for these years</td></tr>`;return;}
   const c=caS&&caS[i];
-  h+=`<tr><td>${eraHead(e)}</td><td style="white-space:normal;min-width:130px">${e.premiers.join(", ")}</td>
+  h+=`<tr><td>${gov(e)}</td>
+  <td><b>${fmtVal(m,s.end.v)}</b><span class="sub">${yrLabel(state.m,s.end.y)}${s.partial?" (latest)":""}</span></td>
   <td>${fmtVal(m,s.base.v)}<span class="sub">${yrLabel(state.m,s.base.y)}${s.firstBase?" (first data year)":""}</span></td>
-  <td>${fmtVal(m,s.end.v)}<span class="sub">${yrLabel(state.m,s.end.y)}${s.partial?" (latest)":""}</span></td>
   <td>${arrow(s.change)}${chg(m,s.change,pct?1:2)}</td><td>${chg(m,s.per,2)}</td><td>${fmtVal(m,s.avg)}</td>
   ${caS?`<td>${c&&c.change!=null?arrow(c.change)+chg(m,c.change,pct?1:2):"—"}</td>`:""}</tr>`;});
  t.innerHTML=h+"</tbody>";
@@ -324,12 +326,15 @@ function csvText(){const m=M[state.m];const ys=new Set();["bc","ca"].forEach(g=>
  return rows.join("\n");}
 // ---------- matrix
 function drawMatrix(){
- const t=$("matrix");let h=`<thead><tr><th>Measure</th>${eras.map(e=>`<th>${eraHead(e)}</th>`).join("")}</tr></thead><tbody>`;
+ const t=$("matrix");const END=state.mx==="end";
+ $("mxNote").textContent=END?"Each cell is the value in the last year of that government's time in office (the latest year for the current government), with the year underneath. Rates such as unemployment and inflation show that year's rate. A dash means the data does not cover those years.":"Each cell is the change over that government's years in office, measured from the last year of the government before it. Cells showing a rate (unemployment, inflation) give the average over the term, as labelled. A dash means the data does not cover those years.";
+let h=`<thead><tr><th>Measure</th>${eras.map(e=>`<th>${eraHead(e)}</th>`).join("")}</tr></thead><tbody>`;
  let grp="";
  keys.forEach(k=>{const m=M[k];if(m.group!==grp){grp=m.group;h+=`<tr><td colspan="${eras.length+1}" style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--bg)">${grp}</td></tr>`;}
   const st=eraStats(k,"bc");const pct=m.delta==="pct";const avgMode=m.stat==="avg";
-  h+=`<tr><td style="white-space:normal;min-width:190px">${m.short||m.label}<span class="sub">${avgMode?"average over years in office":pct?"% change":(m.fmt==="p1"?"change, percentage points":m.fmt==="c1"?"change, cents per revenue dollar":"change")}</span></td>`;
+  h+=`<tr><td style="white-space:normal;min-width:190px">${m.short||m.label}<span class="sub">${END?"value at end of government":avgMode?"average over years in office":pct?"% change":(m.fmt==="p1"?"change, percentage points":m.fmt==="c1"?"change, cents per revenue dollar":"change")}</span></td>`;
   st.forEach(s=>{if(!s){h+=`<td class="na">—</td>`;return;}
+   if(END){h+=`<td>${fmtVal(m,s.end.v)}<span class="sub">${yrLabel(k,s.end.y)}${s.partial?" (latest)":""}</span></td>`;return;}
    if(avgMode){h+=`<td>${s.avg.toFixed(1)}${m.fmt==="p1"?"%":""}<span class="sub">${s.base.y}–${s.end.y}</span></td>`;return;}
    h+=`<td>${arrow(s.change)}${chg(m,s.change,1)}<span class="sub">${short(k,s.base.y)}→${short(k,s.end.y)}</span></td>`;});
   h+="</tr>";});
@@ -348,6 +353,8 @@ function drawSplit(){
   <td>${pp[i]?fmtVal(M.debt_pc_real,pp[i].end.v):"—"}<span class="sub">${pp[i]?(pp[i].end.v-pp[i].base.v>=0?"+":"−")+"$"+Math.abs(Math.round(pp[i].end.v-pp[i].base.v)).toLocaleString("en-CA")+" over the term":""}</span></td></tr>`;});
  t.innerHTML=h+"</tbody>";
 }
+$("mxMode").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;state.mx=b.dataset.v;save();syncMx();drawMatrix();});
+function syncMx(){$("mxMode").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===state.mx)));}
 $("splitMode").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;state.split=b.dataset.v;save();syncSplit();drawSplit();});
 function syncSplit(){$("splitMode").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===state.split)));}
 // ---------- wiring
@@ -373,6 +380,6 @@ let rt;window.addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>
 // sources + as-of
 $("asof").textContent="Data as of "+D.asof+". Sources: Statistics Canada and the BC Ministry of Finance.";
 $("srcList").innerHTML=D.sources.map(s=>`<li>${s}</li>`).join("");
-drawPartyLegend();drawStrip();drawMatrix();syncSplit();drawSplit();renderAll();
+drawPartyLegend();drawStrip();syncMx();drawMatrix();syncSplit();drawSplit();renderAll();
 })();
 </script>
