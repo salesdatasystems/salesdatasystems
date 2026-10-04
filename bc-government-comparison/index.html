@@ -134,8 +134,8 @@ a{color:var(--focus)}
   </section>
 
   <section class="panel" aria-labelledby="h-split">
-    <h2 id="h-split">Where taxpayer-supported debt came from</h2>
-    <p class="note" style="margin:0 0 12px">Operating debt is borrowing to cover everyday spending deficits. Capital and other debt finances buildings, schools, hospitals, transit and other assets. Changes run from the last year of the previous government to the last year of this one, in the dollars selected below. Current dollars make older figures look smaller than they were because prices have risen.</p>
+    <h2 id="h-split">Debt at the end of each government</h2>
+    <p class="note" style="margin:0 0 12px">Operating debt is borrowing to cover everyday spending deficits. Capital and other debt finances buildings, schools, hospitals, transit and other assets. Each figure is the amount of debt in the last fiscal year assigned to that government. Under it is how much that figure changed over the government's term, measured from the last year of the one before. Dollar columns follow the setting below. Current dollars make older figures look smaller than they were because prices have risen.</p>
     <div class="controls" style="margin-bottom:10px"><div class="field"><span class="lab">Dollars</span><div class="seg-btns" id="splitMode"><button data-v="nom" aria-pressed="true">As reported (current dollars)</button><button data-v="real" aria-pressed="false">Adjusted for inflation (2025 dollars)</button></div></div></div>
     <div class="tablewrap"><table id="split"></table></div>
   </section>
@@ -337,11 +337,15 @@ function drawMatrix(){
 }
 function bn(v){return (v>0?"+":v<0?"−":"")+"$"+Math.abs(v/1000).toFixed(1)+"B";}
 function drawSplit(){
- const t=$("split");const R=state.split==="real";const kt=R?"debt_tp_real":"debt_tp_m",ko=R?"debt_op_real":"debt_op_m",kc=R?"debt_cap_real":"debt_cap_m";const tot=eraStats(kt,"bc"),op=eraStats(ko,"bc"),cp=eraStats(kc,"bc");
- let h='<thead><tr><th>Government</th><th>Fiscal years compared</th><th>Total change</th><th>Operating debt change</th><th>Capital and other change</th><th>Operating debt at end</th></tr></thead><tbody>';
+ const t=$("split");const R=state.split==="real";const kt=R?"debt_tp_real":"debt_tp_m",ko=R?"debt_op_real":"debt_op_m",kc=R?"debt_cap_real":"debt_cap_m";
+ const tot=eraStats(kt,"bc"),op=eraStats(ko,"bc"),cp=eraStats(kc,"bc"),pc=eraStats("debt_tp_pct","bc"),pp=eraStats("debt_pc_real","bc");
+ const lvl=(k,s)=>`${fmtVal(M[k],s.end.v)}<span class="sub">${bn(s.end.v-s.base.v)} over the term</span>`;
+ let h='<thead><tr><th>Government</th><th>Last fiscal year in office</th><th>Total debt at end</th><th>Operating debt at end</th><th>Capital and other debt at end</th><th>Share of GDP at end</th><th>Per person at end (2025 $)</th></tr></thead><tbody>';
  eras.forEach((e,i)=>{const a=tot[i],b=op[i],c=cp[i];if(!a||!b||!c)return;
-  h+=`<tr><td>${eraHead(e)}</td><td>${short(kt,a.base.y)} to ${short(kt,a.end.y)}${a.firstBase?'<span class="sub">first data year to end</span>':""}${a.partial?'<span class="sub">latest is a forecast</span>':""}</td>
-  <td>${bn(a.end.v-a.base.v)}</td><td>${bn(b.end.v-b.base.v)}<span class="sub">${fmtVal(M[ko],b.base.v)} to ${fmtVal(M[ko],b.end.v)}</span></td><td>${bn(c.end.v-c.base.v)}</td><td>${fmtVal(M[ko],b.end.v)}</td></tr>`;});
+  h+=`<tr><td>${eraHead(e)}</td><td>${yrLabel(kt,a.end.y)}${a.partial?'<span class="sub">latest, a forecast</span>':""}${a.firstBase?'<span class="sub">starts at first data year</span>':""}</td>
+  <td>${lvl(kt,a)}</td><td>${lvl(ko,b)}</td><td>${lvl(kc,c)}</td>
+  <td>${pc[i]?fmtVal(M.debt_tp_pct,pc[i].end.v):"—"}<span class="sub">${pc[i]?chg(M.debt_tp_pct,pc[i].end.v-pc[i].base.v,1)+" over the term":""}</span></td>
+  <td>${pp[i]?fmtVal(M.debt_pc_real,pp[i].end.v):"—"}<span class="sub">${pp[i]?(pp[i].end.v-pp[i].base.v>=0?"+":"−")+"$"+Math.abs(Math.round(pp[i].end.v-pp[i].base.v)).toLocaleString("en-CA")+" over the term":""}</span></td></tr>`;});
  t.innerHTML=h+"</tbody>";
 }
 $("splitMode").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;state.split=b.dataset.v;save();syncSplit();drawSplit();});
